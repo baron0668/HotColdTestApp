@@ -39,9 +39,9 @@ public class RootUtil
 	public String whereIsBusybox(){return busyboxPath;}
 	
 	
-	/* 有找到 su 在 bin 或者 xbin 底下，並確認時沒發生
-	 * SecurityException (被 superuser 擋住之類的)
-	 * 就表示可以成功取得 Root 權限
+	/* �����su ��bin ��� xbin 摨��嚗�蒂蝣箄�����潛�
+	 * SecurityException (鋡�superuser ���銋����
+	 * 撠梯”蝷箏�隞交����敺�Root 甈��
 	 */
 	public boolean hasRootAccess(){
 		try{
@@ -57,9 +57,9 @@ public class RootUtil
 		return true;
 	}
 	
-	/* 有找到 busybox 在 xbin 或者 bin 底下，並確認時沒發生
-	 * SecurityException (被 superuser 擋住之類的)
-	 * 就表示有安裝好 busybox
+	/* �����busybox ��xbin ��� bin 摨��嚗�蒂蝣箄�����潛�
+	 * SecurityException (鋡�superuser ���銋����
+	 * 撠梯”蝷箸�摰��憟�busybox
 	 */
 	public boolean hasBusybox(){
 		try{
@@ -76,20 +76,14 @@ public class RootUtil
 	}
 	
 	
-	/* 以 root 身分執行命令，傳回執行後的輸出字串
-	 * 	參數：
-	 * 		cmds - 字串陣列，將依序執行的指令
-	 * 
-	 * 	注意：
-	 * 		為避免程序沒有結束卡在 ipt.hasNextLine() , 會自動檢查
-	 * 		傳入資料中是否包含 "exit" , 若沒有會自動加入此命令
-	*/
+	/* 隞�root 頨怠��瑁��賭誘嚗�����銵����撓�箏�銝�	 * 	���嚗�	 * 		cmds - 摮�葡���嚗��靘���瑁����隞�	 * 
+	 * 	瘜冽�嚗�	 * 		�粹����摨����������ipt.hasNextLine() , �����炎��	 * 		�喳�鞈��銝剜��血���"exit" , �交�����芸����甇文�隞�	*/
 	public String rootExec(String...cmds){
 		return rootExec(true,cmds);
 	}
 //============== private ================
 	private String rootExec(boolean autoEnter,String...cmds){
-		//尋找 exit 指令的部分在  rootExecInputStream 中
+		//撠�� exit ��誘������  rootExecInputStream 銝�		
 		InputStream tmpIpt=rootExecInputStream(autoEnter,cmds);
 		if(tmpIpt==null) return null;
 		String result;
@@ -110,7 +104,7 @@ public class RootUtil
 		return str.toString();
 	}
 	/* rootExecInputStream
-	 * 	以 root 身分執行指令並傳回 InputStream
+	 * 	隞�root 頨怠��瑁���誘銝血���InputStream
 	*/
 	private InputStream rootExecInputStream(boolean autoEnter,String...cmds){
 		try{
@@ -120,11 +114,10 @@ public class RootUtil
 			DataOutputStream opt = new DataOutputStream(proc.getOutputStream());
 			InputStream ipt=proc.getInputStream();
 			boolean exitCmdFound=false;
-			//依照傳入的參數一行一行執行指令
+			//靘���喳�����訾�銵��銵��銵��隞�			
 			for(String cmd:cmds){
 				opt.writeBytes(cmd);
-				// NOTE 此 exit 尋找情況不會考慮到 autoEnter=false 的情況
-				if(!exitCmdFound && cmd.equals("exit")) exitCmdFound=true;
+				// NOTE 甇�exit 撠�����銝�������autoEnter=false ���瘜�				if(!exitCmdFound && cmd.equals("exit")) exitCmdFound=true;
 				if(autoEnter) opt.writeBytes("\n");
 			}
 			if(!exitCmdFound) opt.writeBytes("exit\n");
